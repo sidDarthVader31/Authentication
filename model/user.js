@@ -4,7 +4,6 @@ var schema=mongoose.Schema;
 var userSchema=new schema({
     name:String,
     number:{type:String,required:true},
-    otp:String,
     dob:Date,
     gender:String,
     about:String,
@@ -16,6 +15,5 @@ var userSchema=new schema({
     lookingFor:[{type:String}],
     whoAreYou:String
 });
-
 var user=mongoose.model('user',userSchema);
 module.exports=user;

@@ -1,4 +1,5 @@
 const user = require("../model/user");
+const otp=require('../model/otp')
 userRegistration = async (req, res) => {
   try {
     if (req.body.number.length < 10) {
@@ -8,7 +9,7 @@ userRegistration = async (req, res) => {
       if (found) {
         res.status(401).json({ status: false, message: "user already exists" });
       } else {
-        var result = new user(req.body);
+        var result = new otp(req.body);
         result.otp = Math.floor(Math.random() * 9999) + 1000;
         result.save(err => {
           if (err) console.error(err);
@@ -27,7 +28,6 @@ userRegistration = async (req, res) => {
     res.status(500).json({ status: false, message: e.toString() });
   }
 };
-
 const verifyOtp = async(req, res) => {
     try{
         if(!req.body.number){
@@ -37,16 +37,17 @@ const verifyOtp = async(req, res) => {
             res.status(400).json({status:false,message:'otp is missing'})
         }
         else{
-            const found=new user(await user.findOne({number:req.body.number}));
-            console.log(found)
-            // res.status(200).json({status:true,message:'working'})
+            const found=await otp.findOne({number:req.body.number});
             if(!found){
                 res.status(400).json({status:false,message:'user does not exist'})
             }
             else{
                 if(found.otp===req.body.otp){
-                    found.isRegistered=true
-                    found.save();
+                    var newUser=new user({
+                        number:found.number,
+                        isRegistered:true
+                    })
+                    newUser.save();
                     res.status(200).json({status:true,message:'user verified successfully'})
                 }
                 else{
