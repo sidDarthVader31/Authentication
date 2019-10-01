@@ -1,5 +1,6 @@
 const user = require("../model/user");
 const otp=require('../model/otp')
+
 userRegistration = async (req, res) => {
   try {
     if (req.body.number.length < 10) {
@@ -7,7 +8,7 @@ userRegistration = async (req, res) => {
     } else {
       const found = await user.findOne({ number: req.body.number });
       if (found) {
-        res.status(401).json({ status: false, message: "user already exists" });
+        // send found.otp to message 91 service
       } else {
         var result = new otp(req.body);
         result.otp = Math.floor(Math.random() * 9999) + 1000;
@@ -48,6 +49,7 @@ const verifyOtp = async(req, res) => {
                         isRegistered:true
                     })
                     newUser.save();
+                    await found.remove();
                     res.status(200).json({status:true,message:'user verified successfully'})
                 }
                 else{
@@ -62,7 +64,27 @@ const verifyOtp = async(req, res) => {
 };
 
 
-const resendOtp = (req, res) => {};
+const resendOtp = async (req, res) => {
+  try{
+   
+  if(!req.body.number){
+    res.status(401).json({status:false,message:'phone number is missing'})
+  }
+  else {
+    const found=await otp.findOne({number:req.body.number});
+    if(found){
+      //send sms to found.number and otp as found.otp
+      res.status(200).json({status:true,message:'otp sent again successfully'})
+    }
+    else{
+      res.status(403).json({status:false,message:'user does not exist, please sign up'})
+    }
+  } 
+  }
+  catch(e){
+    res.status(500).json({status:false,message:e.toString()})
+  }
+};
 
 
 module.exports = {
