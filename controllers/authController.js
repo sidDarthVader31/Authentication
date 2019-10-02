@@ -1,5 +1,5 @@
 const user = require("../model/user");
-
+const otpGenerator=require('../helper/otpgenerator');
 userRegistration = async (req, res) => {
   try {
     if (req.body.number.length < 10) {
@@ -10,7 +10,7 @@ userRegistration = async (req, res) => {
         res.status(401).json({status:false,message:'user already exists'});
       } else {
         var result = new user(req.body);
-        result.otp = Math.floor(Math.random() * 9999) + 1000;
+        result.otp = otpGenerator();
         result.save(err => {
           if (err) console.error(err);
           res
@@ -81,9 +81,25 @@ const resendOtp = async (req, res) => {
   }
 };
 
-
+const login=async (req,res)=>{
+  if(req.body.number.length<10){
+    res.status(400).json({status:false,message:'invalid phone number'});
+  }
+  else{
+    const found=await user.findOne({number:req.body.number})
+    if(!found ||!found.isRegistered){
+      res.status(401).json({status:false,message:'user does not exist'});
+    }
+    else {
+      found.otp=otpGenerator()
+      await found.save();
+      res.status(200).json({status:true,message:'otp sent successfully',otp:found.otp});
+    }
+  }
+};
 module.exports = {
   userRegistration,
   verifyOtp,
-  resendOtp
+  resendOtp,
+  login
 };
