@@ -14,6 +14,8 @@ app.use(express.json({
       }
     }
   }));
+
+// app.use(jsonValidator);
 app.get('/',(req,res)=>{
    res.send("<h1>hello world</h1>");
 })

@@ -1,5 +1,4 @@
 const user = require("../model/user");
-const otp=require('../model/otp')
 
 userRegistration = async (req, res) => {
   try {
@@ -8,9 +7,9 @@ userRegistration = async (req, res) => {
     } else {
       const found = await user.findOne({ number: req.body.number });
       if (found) {
-        // send found.otp to message 91 service
+        res.status(401).json({status:false,message:'user already exists'});
       } else {
-        var result = new otp(req.body);
+        var result = new user(req.body);
         result.otp = Math.floor(Math.random() * 9999) + 1000;
         result.save(err => {
           if (err) console.error(err);
@@ -38,19 +37,15 @@ const verifyOtp = async(req, res) => {
             res.status(400).json({status:false,message:'otp is missing'})
         }
         else{
-            const found=await otp.findOne({number:req.body.number});
+            const found=await user.findOne({number:req.body.number});
             if(!found){
                 res.status(400).json({status:false,message:'user does not exist'})
             }
             else{
                 if(found.otp===req.body.otp){
-                    var newUser=new user({
-                        number:found.number,
-                        isRegistered:true
-                    })
-                    newUser.save();
-                    await found.remove();
-                    res.status(200).json({status:true,message:'user verified successfully'})
+                    found.isRegistered=true
+                    await found.save();
+                    res.status(201).json({status:true,message:'user verified successfully'})
                 }
                 else{
                     res.status(400).json({status:false,message:'wrong otp'})
@@ -71,10 +66,10 @@ const resendOtp = async (req, res) => {
     res.status(401).json({status:false,message:'phone number is missing'})
   }
   else {
-    const found=await otp.findOne({number:req.body.number});
+    const found=await user.findOne({number:req.body.number});
     if(found){
       //send sms to found.number and otp as found.otp
-      res.status(200).json({status:true,message:'otp sent again successfully'})
+      res.status(200).json({status:true,message:'otp sent again successfully',otp:found.otp})
     }
     else{
       res.status(403).json({status:false,message:'user does not exist, please sign up'})

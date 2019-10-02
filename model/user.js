@@ -5,6 +5,7 @@ var userSchema=new schema({
     name:String,
     number:{type:String,required:true},
     dob:Date,
+    otp:String,
     gender:String,
     about:String,
     latitude:String,
