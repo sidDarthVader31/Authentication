@@ -102,10 +102,14 @@ const login=async (req,res)=>{
   }
 };
 
+
+/**
+ * api to save basic details 
+ * @param {} req 
+ * @param {*} res 
+ */
 const basicDetails=async (req,res)=>{
   try{
-
-  
   if(!req.body.name){
     res.status(400).json({status:false,message:'Name is missing'})
   }
