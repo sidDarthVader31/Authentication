@@ -2,7 +2,7 @@ const mongoose=require('mongoose')
 var educationSchema=mongoose.Schema({
     school:String,
     courseName:String,
-    FieldOfStudy:String,
+    fieldOfStudy:String,
     startDate:String,
     endDate:String,
     location:String

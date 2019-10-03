@@ -1,6 +1,7 @@
 const user = require("../model/user");
 const otpGenerator = require("../helper/otpgenerator");
-
+const education = require("../model/education");
+const experience = require("../model/experience");
 /**
  * handle sign up
  */
@@ -158,156 +159,11 @@ const basicDetails = async (req, res) => {
   }
 };
 
-/**
- * req.body={
- * gender:,
- * dob:,
- * location:,
- * relationshipStatus:,
- * email:
- * }
- * @param {*} req
- * @param {*} res
- */
-const postAboutMe = async (req, res) => {
-  try {
-    const found = await user.findOne({ _id: req.userId });
-    if (!found) {
-      res.status(400).json({ status: false, message: "user does not exist" });
-    } else {
-      if (req.body.gender) {
-        found.gender = req.body.gender;
-      }
-      if (req.body.dob) {
-        found.dob = req.body.dob;
-      }
-      if (req.body.location) {
-        found.location = req.body.location;
-      }
-      if (req.body.relationshipStatus) {
-        found.relationshipStatus = req.body.relationshipStatus;
-      }
-      if (req.body.email) {
-        found.email = req.body.email;
-      }
-      await found.save();
-      res
-        .status(200)
-        .json({ status: true, message: "details saved successfully" });
-    }
-  } catch (e) {
-    res.status(500).json({ status: false, message: e.toString() });
-  }
-};
-const postPersonalDetails = async (req, res) => {};
-const postEducation = async (req, res) => {};
-const postExperience = async (req, res) => {};
-
-const getAboutMe = async (req, res) => {
-  const found = await user.findOne({ _id: req.query.id });
-  try {
-    if (!found) {
-      res.status(400).json({ status: false, message: "User does not exist" });
-    } else {
-      var data = {
-        gender: found.gender,
-        dob: found.dob,
-        location: found.location,
-        relationshipStatus: found.relationshipStatus,
-        email: found.email
-      };
-      res.status(200).json({
-        status: true,
-        message: "date extracted successfully",
-        data: data
-      });
-    }
-  } catch (e) {
-    res.status(500).json({ status: false, message: e.toString() });
-  }
-};
-const getPersonalDetails = async (req, res) => {
-  const found = await user.findOne({ _id: req.params.id });
-  try {
-    if (!found) {
-      res.status(400).json({ status: false, message: "User does not exist" });
-    } else {
-      var data = {
-        height: user.height,
-        weight: user.weight,
-        fitness: user.fitness,
-        drinking: user.drinking,
-        smoking: user.smoking,
-        religion: user.religion,
-        politicalViews: user.politicalViews,
-        bloodGroup: user.bloodGroup
-      };
-      res.status(200).json({
-        status: true,
-        message: "date extracted successfully",
-        data: data
-      });
-    }
-  } catch (e) {
-    res.status(500).json({ status: false, message: e.toString() });
-  }
-};
-
-const getInterests = async (req, res) => {
-  try {
-    const found = await user.findOne({ _id: req.params.id });
-    if (!found) {
-      res.status(400).json({ status: false, message: "user not found" });
-    } else {
-      res.status(200).json({
-        status: false,
-        message: "data received",
-        data: found.intersts
-      });
-    }
-  } catch (e) {
-    res.status(500).json({ status: false, message: e.toString() });
-  }
-};
-const getEducation = async (req, res) => {
-  try {
-    const found = await user.findOne({ _id: req.params.id });
-    if (!found) {
-      res.status(400).json({ status: false, message: "user not found" });
-    } else {
-      res.status(200).json({
-        status: false,
-        message: "data received",
-        data: found.education
-      });
-    }
-  } catch (e) {
-    res.status(500).json({ status: false, message: e.toString() });
-  }
-};
-const getExperience = async (req, res) => {
-  try {
-    const found = await user.findOne({ _id: req.params.id });
-    if (!found) {
-      res.status(400).json({ status: false, message: "user not found" });
-    } else {
-      res.status(200).json({
-        status: false,
-        message: "data received",
-        data: found.experience
-      });
-    }
-  } catch (e) {
-    res.status(500).json({ status: false, message: e.toString() });
-  }
-};
 
 module.exports = {
   userRegistration,
   verifyOtp,
   resendOtp,
   login,
-  basicDetails,
-  postAboutMe,
-  getAboutMe
+  basicDetails
 };

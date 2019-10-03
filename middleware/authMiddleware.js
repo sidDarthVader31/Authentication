@@ -9,6 +9,6 @@ module.exports = function(req, res, next) {
     req.userId = decoded._id;
     next();
   } catch (ex) {
-    res.status(400).json({status:false,message:ex.toString()});
+    res.status(400).json({status:false,message:ex.toString()+"catch"});
   }
 };
