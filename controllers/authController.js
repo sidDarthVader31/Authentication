@@ -45,7 +45,11 @@ const verifyOtp = async(req, res) => {
                 if(found.otp===req.body.otp){
                     found.isRegistered=true
                     await found.save();
-                    res.status(201).json({status:true,message:'user verified successfully'})
+                    const data={
+                      id:found._id,
+                      token:found.generateAuthToken()
+                    }
+                    res.status(201).json({status:true,message:'user verified successfully',data:data})
                 }
                 else{
                     res.status(400).json({status:false,message:'wrong otp'})
