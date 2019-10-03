@@ -7,4 +7,6 @@ router.post('/verifyotp',controller.verifyOtp)
 router.post('/resendOtp',controller.resendOtp)
 router.post('/login',controller.login)
 router.post('/basicDetails',authMiddleware,controller.basicDetails)
+router.post('/postAboutMe',authMiddleware,controller.postAboutMe)
+router.get('/getAboutMe',authMiddleware,controller.getAboutMe)
 module.exports=router;

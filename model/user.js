@@ -8,7 +8,7 @@ var userSchema=new schema({
     dob:Date,
     otp:String,
     gender:String,
-    about:String,
+    bio:{type:String,maxlength:255},
     latitude:String,
     longitude:String,
     createdAt:{type:Date,default:Date.now()},
@@ -30,6 +30,8 @@ var userSchema=new schema({
     religion:String,
     politicalViews:String,
     bloodGroup:String,
+    education:[{ type: mongoose.Schema.Types.ObjectId, ref: 'education' }],
+    experience:[{type:mongoose.Schema.Types.ObjectId,ref:'experience'}]
 });
 
 userSchema.methods.generateAuthToken = function() { 
