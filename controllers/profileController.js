@@ -42,7 +42,45 @@ const postAboutMe = async (req, res) => {
       res.status(500).json({ status: false, message: e.toString() });
     }
   };
-  const postPersonalDetails = async (req, res) => {};
+  const postPersonalDetails = async (req, res) => {
+    try{
+      const found=user.findOne({_id:req.userId});
+      if(!found){
+        res.status(400).json({status:false,message:'User not found'});
+      }
+      else{
+        if(req.body.height){
+          found.height=req.body.height;
+        }
+        if(req.body.weight){
+          found.weight=req.body.weight;
+        }
+        if(req.body.fitness){
+          found.fitness=req.body.fitness;
+        }
+        if(req.body.drinking){
+          found.drinking=req.body.drinking;
+        }
+        if(req.body.smoking){
+          found.smoking=req.body.smoking;
+        }
+        if(req.body.religion){
+          found.religion=req.body.religion;
+        }
+        if(req.body.politicalViews){
+          found.politicalViews=req.body.politicalViews;
+        }
+        if(req.body.bloodGroup){
+          found.bloodGroup=req.body.bloodGroup
+        }
+        await found.save()
+        res.status(200).json({status:true,message:"details saved successfully",data:found})
+      }
+    }
+    catch(e){
+      res.status(500).json({status:false,message:e.toString()})
+    }
+  };
   const postEducation = async (req, res) => {
     try{
       if(!req.body.school){
@@ -82,7 +120,7 @@ const postAboutMe = async (req, res) => {
         }
         else{
           var result=new education({
-            school=req.body.school,
+            school:req.body.school,
             courseName:req.body.courseName,
             fieldOfStudy:req.body.fieldOfStudy,
             startDate:req.body.startDate,
@@ -248,5 +286,7 @@ const postAboutMe = async (req, res) => {
     postExperience,
     getExperience,
     postEducation,
-    getEducation
+    getEducation,
+    postPersonalDetails,
+    getPersonalDetails
   };  
