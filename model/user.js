@@ -29,7 +29,7 @@ var userSchema=new schema({
     smoking:String,
     religion:String,
     politicalViews:String,
-    bloodGroup:String
+    bloodGroup:String,
 });
 
 userSchema.methods.generateAuthToken = function() { 

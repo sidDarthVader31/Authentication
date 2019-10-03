@@ -6,4 +6,5 @@ router.post('/signup',controller.userRegistration)
 router.post('/verifyotp',controller.verifyOtp)
 router.post('/resendOtp',controller.resendOtp)
 router.post('/login',controller.login)
+router.post('/basicDetails',authMiddleware,controller.basicDetails)
 module.exports=router;

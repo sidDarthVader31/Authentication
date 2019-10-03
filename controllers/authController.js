@@ -101,9 +101,44 @@ const login=async (req,res)=>{
     }
   }
 };
+
+const basicDetails=async (req,res)=>{
+  try{
+
+  
+  if(!req.body.name){
+    res.status(400).json({status:false,message:'Name is missing'})
+  }
+  else if(!req.body.age){
+    res.status(400).json({status:false,message:'age is missing'})
+  }
+  else if(!req.body.gender){
+    res.status(400).json({status:false,message:'Gender is missing'})
+  }
+  else{
+    const found=await user.findOne({_id:req.userId})
+    if(!found){
+      res.status(400).json({status:false,message:'user not found.'})  
+    }
+    else{
+      found.name=req.body.name;
+      found.age=parseInt(req.body.age);
+      found.gender=req.body.gender;
+      if(req.body.lookingFor instanceof Array){
+        found.lookingFor=req.body.lookingFor;
+      }
+      await found.save()
+      res.status(200).json({status:true,message:'data saved successfully',data:found})
+    }
+  }
+}catch(e){
+  res.status(500).json({status:false,message:e.toString()})
+}
+};
 module.exports = {
   userRegistration,
   verifyOtp,
   resendOtp,
-  login
+  login,
+  basicDetails
 };
