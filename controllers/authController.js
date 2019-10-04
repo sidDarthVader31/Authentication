@@ -7,7 +7,10 @@ const experience = require("../model/experience");
  */
 userRegistration = async (req, res) => {
   try {
-    if (req.body.number.length < 10) {
+    if(!req.body.number){
+      res.status(400).json({status:false,message:"mobile number is missing"});
+    }
+    else if (req.body.number.length < 10) {
       res.status(400).json({ status: false, message: "invalid mobile number" });
     } else {
       const found = await user.findOne({ number: req.body.number });

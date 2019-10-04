@@ -1,6 +1,7 @@
 const user = require("../model/user");
 const education = require("../model/education");
 const experience = require("../model/experience");
+
 /**
  * req.body={
  * gender:,
@@ -36,15 +37,16 @@ const postAboutMe = async (req, res) => {
         await found.save();
         res
           .status(200)
-          .json({ status: true, message: "details saved successfully" });
+          .json({ status: true, message: "details saved successfully",data:found });
       }
     } catch (e) {
       res.status(500).json({ status: false, message: e.toString() });
     }
   };
+
   const postPersonalDetails = async (req, res) => {
     try{
-      const found=user.findOne({_id:req.userId});
+      const found=await user.findOne({_id:req.userId});
       if(!found){
         res.status(400).json({status:false,message:'User not found'});
       }
@@ -73,12 +75,12 @@ const postAboutMe = async (req, res) => {
         if(req.body.bloodGroup){
           found.bloodGroup=req.body.bloodGroup
         }
-        await found.save()
-        res.status(200).json({status:true,message:"details saved successfully",data:found})
+        await found.save();
+        res.status(200).json({status:true,message:"details saved successfully",data:found});
       }
     }
     catch(e){
-      res.status(500).json({status:false,message:e.toString()})
+      res.status(500).json({status:false,message:e.toString()});
     }
   };
   const postEducation = async (req, res) => {
@@ -193,7 +195,7 @@ const postAboutMe = async (req, res) => {
           dob: found.dob,
           location: found.location,
           relationshipStatus: found.relationshipStatus,
-          email: found.email
+          email: found.email,
         };
         res.status(200).json({
           status: true,
@@ -206,21 +208,23 @@ const postAboutMe = async (req, res) => {
     }
   };
   const getPersonalDetails = async (req, res) => {
-    const found = await user.findOne({ _id: req.params.id });
+   
     try {
+      const found = await user.findOne({ _id: req.query.id });
       if (!found) {
         res.status(400).json({ status: false, message: "User does not exist" });
       } else {
         var data = {
-          height: user.height,
-          weight: user.weight,
-          fitness: user.fitness,
-          drinking: user.drinking,
-          smoking: user.smoking,
-          religion: user.religion,
-          politicalViews: user.politicalViews,
-          bloodGroup: user.bloodGroup
+          height: found.height,
+          weight: found.weight,
+          fitness: found.fitness,
+          drinking: found.drinking,
+          smoking: found.smoking,
+          religion: found.religion,
+          politicalViews: found.politicalViews,
+          bloodGroup: found.bloodGroup
         };
+        
         res.status(200).json({
           status: true,
           message: "date extracted successfully",
