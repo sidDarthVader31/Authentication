@@ -130,6 +130,7 @@ const login = async (req, res) => {
  * @param {} req
  * @param {*} res
  */
+
 const basicDetails = async (req, res) => {
   try {
     if (!req.body.name) {
