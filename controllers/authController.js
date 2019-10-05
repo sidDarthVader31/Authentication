@@ -1,39 +1,28 @@
 const user = require("../model/user");
 const otpGenerator = require("../helper/otpgenerator");
-const education = require("../model/education");
-const experience = require("../model/experience");
+const repository = require("../repository");
 /**
  * handle sign up
  */
 userRegistration = async (req, res) => {
   try {
-    if(!req.body.number){
-      res.status(400).json({status:false,message:"mobile number is missing"});
-    }
-    else if (req.body.number.length < 10) {
-      res.status(400).json({ status: false, message: "invalid mobile number" });
+    const found = await user.findOne({ number: req.body.number });
+    if (found) {
+      res.status(401).json({ data: "user already exists" });
     } else {
-      const found = await user.findOne({ number: req.body.number });
-      if (found) {
-        res.status(401).json({ status: false, message: "user already exists" });
-      } else {
-        var result = new user(req.body);
-        result.otp = otpGenerator();
-        result.save(err => {
-          if (err) console.error(err);
-          res.status(200).json({
-            status: true,
-            message: "otp sent successfully",
-            otp: result.otp
-          });
-        });
-      }
+      var result = new user(req.body);
+      result.otp = otpGenerator();
+      await result.save();
+      res.status(200).json({
+        data: result.otp
+      });
     }
   } catch (e) {
     console.error(e);
     res.status(500).json({ status: false, message: e.toString() });
   }
 };
+
 /**
  *
  * @param {request received from front end} req
@@ -41,17 +30,6 @@ userRegistration = async (req, res) => {
  */
 const verifyOtp = async (req, res) => {
   try {
-    if (!req.body.number) {
-      res
-        .status(400)
-        .json({ status: false, message: "phone number is missing" });
-    } else if (!req.body.otp) {
-      res.status(400).json({ status: false, message: "otp is missing" });
-    } else {
-      const found = await user.findOne({ number: req.body.number });
-      if (!found) {
-        res.status(400).json({ status: false, message: "user does not exist" });
-      } else {
         if (found.otp === req.body.otp) {
           found.isRegistered = true;
           await found.save();
@@ -68,8 +46,7 @@ const verifyOtp = async (req, res) => {
           res.status(400).json({ status: false, message: "wrong otp" });
         }
       }
-    }
-  } catch (e) {
+     catch (e) {
     res.status(500).json({ status: false, message: e.toString() });
   }
 };
@@ -162,7 +139,6 @@ const basicDetails = async (req, res) => {
     res.status(500).json({ status: false, message: e.toString() });
   }
 };
-
 
 module.exports = {
   userRegistration,

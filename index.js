@@ -4,9 +4,9 @@ const PORT = process.env.PORT || 3000;
 const jsonValidator=require('./middleware/jsonValidator')
 const routerAuth=require('./routes/api/auth')
 const mongoose=require('mongoose')
+var expressValidator = require('express-validator');
 mongoose.connect('mongodb://localhost/esocial',
 {useNewUrlParser:true},{useUnifiedTopology:true})
-
 app.use(express.json({
     verify : (req, res, buf, encoding) => {
       try {
@@ -17,8 +17,7 @@ app.use(express.json({
       }
     }
   }));
-
-// app.use(jsonValidator);
+  
 app.get('/',(req,res)=>{
    res.send("<h1>hello world</h1>");
 })

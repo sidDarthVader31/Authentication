@@ -398,9 +398,7 @@ const updateEducation = async (req, res) => {
            found.save((err)=>{
              if(err){
              }
-            
            });
-     
       });
 
         res.status(200).json({
