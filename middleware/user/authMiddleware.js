@@ -12,7 +12,6 @@ const verifyToken = function(req, res, next) {
   try {
     const decoded = jwt.verify(token, config.get("authKey"));
     req.userId = decoded._id;
-   
     next();
   } catch (ex) {
     sendResponse(res,400,ex.toString()+"catch");
@@ -26,7 +25,7 @@ const checkIfUserExist= async(req,res,next)=>{
       sendResponse(res,400,"user not found");
     }
     else{
-      req.user=found;
+      req.data=found;
       next();
     }
   }

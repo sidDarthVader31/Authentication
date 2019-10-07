@@ -13,7 +13,10 @@ router.post("/login", authController.login);
 router.post("/basicDetails",  authMiddleware.verifyToken, authController.basicDetails);
 //profile api's
 
-router.post("/postAboutMe",  authMiddleware.verifyToken, profileController.postAboutMe);
+router.post("/postAboutMe", 
+ authMiddleware.verifyToken,
+authMiddleware.checkIfUserExist,
+ profileController.postAboutMe);
 router.get(
   "/getAboutMe",
   authMiddleware.verifyToken,

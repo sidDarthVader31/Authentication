@@ -15,22 +15,8 @@ const sendResponse = require("../helper/sendResponse");
  */
 const postAboutMe = async (req, res) => {
   try {
-    const found = new user(req.user);
-    if (req.body.gender) {
-      found.gender = req.body.gender;
-    }
-    if (req.body.dob) {
-      found.dob = req.body.dob;
-    }
-    if (req.body.location) {
-      found.location = req.body.location;
-    }
-    if (req.body.relationshipStatus) {
-      found.relationshipStatus = req.body.relationshipStatus;
-    }
-    if (req.body.email) {
-      found.email = req.body.email;
-    }
+    const found =new user(req.data);
+    Object.assign(found,req.body);
     await found.save();
     sendResponse(res, 200, found);
   } catch (e) {
@@ -41,30 +27,8 @@ const postAboutMe = async (req, res) => {
 const postPersonalDetails = async (req, res) => {
   try {
     const found = new user(req.user);
-    if (req.body.height) {
-      found.height = req.body.height;
-    }
-    if (req.body.weight) {
-      found.weight = req.body.weight;
-    }
-    if (req.body.fitness) {
-      found.fitness = req.body.fitness;
-    }
-    if (req.body.drinking) {
-      found.drinking = req.body.drinking;
-    }
-    if (req.body.smoking) {
-      found.smoking = req.body.smoking;
-    }
-    if (req.body.religion) {
-      found.religion = req.body.religion;
-    }
-    if (req.body.politicalViews) {
-      found.politicalViews = req.body.politicalViews;
-    }
-    if (req.body.bloodGroup) {
-      found.bloodGroup = req.body.bloodGroup;
-    }
+    const input=req.body;
+    Object.assign(found,input);
     await found.save();
     sendResponse(res, 200, found);
   } catch (e) {
@@ -110,9 +74,8 @@ const postExperience = async (req, res) => {
 };
 
 const getAboutMe = async (req, res) => {
-  const found = await user.findOne({ _id: req.query.id });
   try {
-    const found = new user(req.user);
+    const found = req.data;
     var data = {
       gender: found.gender,
       dob: found.dob,
@@ -194,6 +157,9 @@ const updateExperience = async (req, res) => {
           (ex.currentlyWorking = result.currentlyWorking);
       }
       found.save(err => {
+        if(err){
+          
+        }
         sendResponse(res, 200, found.result);
       });
     });
