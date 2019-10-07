@@ -2,6 +2,8 @@ const mongoose=require('mongoose')
 const config=require('config')
 const jwt=require('jsonwebtoken')
 var schema=mongoose.Schema;
+var education=require('./education')
+var experience=require('./experience')
 var userSchema=new schema({
     name:String,
     number:{type:String,required:true},
@@ -30,28 +32,13 @@ var userSchema=new schema({
     religion:String,
     politicalViews:String,
     bloodGroup:String,
-    education:[new schema({
-      school:String,
-      courseName:String,
-      FieldOfStudy:String,
-      startDate:String,
-      endDate:String,
-      location:String
-    })],
-    experience:[new schema({
-      company:String,
-      designation:String,
-      startDate:String,
-      endDate:String,
-      currentlyWorking:Boolean,
-      location:String
-    })]
+    education:[{ type:schema.Types.ObjectId, ref: 'education' }],
+    experience:[{ type: schema.Types.ObjectId, ref:'experience' }]
 });
 
 userSchema.methods.generateAuthToken = function() { 
     const token = jwt.sign({ _id: this._id}, config.get('authKey')); //get the private key from the config file -> environment variable
     return token;
   }
-  
 var user=mongoose.model('user',userSchema);
 module.exports=user;

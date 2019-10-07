@@ -26,7 +26,7 @@ const postAboutMe = async (req, res) => {
 
 const postPersonalDetails = async (req, res) => {
   try {
-    const found = new user(req.user);
+    const found = new user(req.data);
     const input=req.body;
     Object.assign(found,input);
     await found.save();
@@ -38,7 +38,7 @@ const postPersonalDetails = async (req, res) => {
 
 const postEducation = async (req, res) => {
   try {
-    const found = new user(req.user);
+    const found = new user(req.data);
     var result = new education({
       school: req.body.school,
       courseName: req.body.courseName,
@@ -48,26 +48,23 @@ const postEducation = async (req, res) => {
       location: req.body.location
     });
     found.education.push(result);
+    await result.save();
     await found.save();
     sendResponse(res, 200, result);
   } catch (e) {
     sendResponse(res, 500, e.toString());
   }
 };
+
 const postExperience = async (req, res) => {
   try {
-    var result = new experience({
-      company: req.body.company,
-      designation: req.body.designation,
-      startDate: req.body.startDate,
-      endDate: req.body.endDate,
-      location: req.body.location,
-      currentlyWorking: req.body.currentlyWorking
-    });
-    const found = new user(req.user);
-    found.experience.push(result);
+    var result = new experience(req.body);
+    result.userId=req.userId;
+    const found = new user(req.data);
+    found.experience.push(result._id);
     await found.save();
-    sendResponse(res, 200, result);
+    await result.save();
+    sendResponse(res, 200, found);
   } catch (e) {
     sendResponse(res, 500, e.toString());
   }
@@ -88,9 +85,10 @@ const getAboutMe = async (req, res) => {
     sendResponse(res, 500, e.toString());
   }
 };
+
 const getPersonalDetails = async (req, res) => {
   try {
-    const found = new user(req.user);
+    const found = new user(req.data);
     var data = {
       height: found.height,
       weight: found.weight,
@@ -109,7 +107,7 @@ const getPersonalDetails = async (req, res) => {
 
 const getInterests = async (req, res) => {
   try {
-    const found = new user(req.user);
+    const found = new user(req.data);
     sendResponse(res, 200, found.intersts);
   } catch (e) {
     sendResponse(res, 500, e.toString());
@@ -118,7 +116,7 @@ const getInterests = async (req, res) => {
 
 const getEducation = async (req, res) => {
   try {
-    const found = new user(req.user);
+    const found = new user(req.data);
     sendResponse(res, 200, found.education);
   } catch (e) {
     sendResponse(res, 500, e.toString());
@@ -127,7 +125,7 @@ const getEducation = async (req, res) => {
 
 const getExperience = async (req, res) => {
   try {
-    const found = req.user;
+    const found = req.data;
     sendResponse(res, 200, found.experience);
   } catch (e) {
     sendResponse(res, 500, e.toString());
@@ -145,7 +143,7 @@ const updateExperience = async (req, res) => {
       location: req.body.location,
       currentlyWorking: req.body.currentlyWorking
     });
-    const found = new user(req.user);
+    const found = new user(req.data);
     found.experience.forEach(function(ex) {
       if (ex._id == req.body.id) {
         (ex.company = result.company),
@@ -158,7 +156,7 @@ const updateExperience = async (req, res) => {
       }
       found.save(err => {
         if(err){
-          
+
         }
         sendResponse(res, 200, found.result);
       });
@@ -179,7 +177,7 @@ const updateEducation = async (req, res) => {
       location: req.body.location,
       fieldOfStudy: req.body.fieldOfStudy
     });
-    const found = new user(req.user);
+    const found = new user(req.data);
     found.education.forEach(function(ex) {
       if (ex._id == req.body.id) {
         (ex.school = result.school),

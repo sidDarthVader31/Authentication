@@ -45,7 +45,7 @@ router.post(
   authMiddleware.checkIfUserExist,
   profileController.postEducation
 );
-router.post(
+router.get(
   "/getEducation",
   authMiddleware.verifyToken,
   profileValidator.checkUserId,

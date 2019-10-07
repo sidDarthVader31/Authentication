@@ -1,6 +1,7 @@
 const mongoose=require('mongoose')
+const user=require('./user')
 var experienceSchema=mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
+    userId: { type:mongoose.Schema.Types.ObjectId,ref:'user' },
     company:String,
     designation:String,
     startDate:String,

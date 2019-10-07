@@ -56,7 +56,7 @@ const postEducation = [
     .exists()
     .withMessage("course name is missing")
     .bail(),
-  check("fieldofStudy")
+  check("fieldOfStudy")
     .exists()
     .withMessage("field of study working is missing")
     .bail(),
