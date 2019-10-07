@@ -3,13 +3,12 @@ const router=express.Router();
 const authMiddleware=require('../../middleware/authMiddleware');
 const authController=require('../../controllers/authController');
 const profileController=require('../../controllers/profileController');
-const userRegistrationMiddleware=require('../../middleware/userRegistrationMiddleware')
-const verifyOtpMiddleware=require('../../middleware/verifyOtpMiddleware');
-const basicDetailsMiddleware=require('../../middleware/basicDetailsMiddleware')
+const authValidator=require('../../middleware/authValidtionMiddleware')
+
 //authentication
-router.post('/signup',userRegistrationMiddleware,  authController.userRegistration);
-router.post('/verifyotp',verifyOtpMiddleware,authController.verifyOtp);
-router.post('/resendOtp',basicDetailsMiddleware,  authController.resendOtp);
+router.post('/signup',authValidator.signup,  authController.userRegistration);
+router.post('/verifyotp',authValidator.verifyOtp,authController.verifyOtp);
+router.post('/resendOtp',authValidator.basicDetails,authController.resendOtp);
 router.post('/login',authController.login);
 router.post('/basicDetails',authMiddleware,authController.basicDetails);
 //profile api's
@@ -24,5 +23,4 @@ router.get('/getPersonalDetails',authMiddleware,profileController.getPersonalDet
 router.put('/updateExperience',authMiddleware,profileController.updateExperience);
 router.put('/updateEducation',authMiddleware,profileController.updateEducation);
 module.exports=router;
-
 

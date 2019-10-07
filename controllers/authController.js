@@ -30,24 +30,23 @@ userRegistration = async (req, res) => {
  */
 const verifyOtp = async (req, res) => {
   try {
-        if (found.otp === req.body.otp) {
+    const found= await user.findOne({number:req.body.number})
+        if (found.otp == req.body.otp) {
           found.isRegistered = true;
           await found.save();
           const data = {
             id: found._id,
             token: found.generateAuthToken()
           };
-          res.status(201).json({
-            status: true,
-            message: "user verified successfully",
+          return res.status(201).json({
             data: data
           });
         } else {
-          res.status(400).json({ status: false, message: "wrong otp" });
+          return res.status(400).json({ data:"wrong otp" });
         }
       }
      catch (e) {
-    res.status(500).json({ status: false, message: e.toString() });
+    return res.status(500).json({ data: e.toString() });
   }
 };
 
@@ -110,13 +109,6 @@ const login = async (req, res) => {
 
 const basicDetails = async (req, res) => {
   try {
-    if (!req.body.name) {
-      res.status(400).json({ status: false, message: "Name is missing" });
-    } else if (!req.body.age) {
-      res.status(400).json({ status: false, message: "age is missing" });
-    } else if (!req.body.gender) {
-      res.status(400).json({ status: false, message: "Gender is missing" });
-    } else {
       const found = await user.findOne({ _id: req.userId });
       if (!found) {
         res.status(400).json({ status: false, message: "user not found." });
@@ -134,7 +126,6 @@ const basicDetails = async (req, res) => {
           data: found
         });
       }
-    }
   } catch (e) {
     res.status(500).json({ status: false, message: e.toString() });
   }
