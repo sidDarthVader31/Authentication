@@ -39,7 +39,10 @@ const basicDetails=[
     .exists()
     .withMessage("age is missing")
     .bail()
-    .isLength({ min: 2, max: 2 }),
+    .isLength({ min: 2, max: 2 })
+    .isInt()
+    .withMessage("age should be an integer")
+    .bail(),
     check("gender")
     .exists()
     .withMessage("gender is missing")
