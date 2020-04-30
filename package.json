@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node server",
-    "dev": "nodemon server"
+    "dev": "nodemon server",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -26,9 +28,11 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.3.2",
     "mongoose": "^5.7.3",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "nodemon": "^1.19.3"
-  }
+  },
+  "snyk": true
 }
